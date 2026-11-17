@@ -3,7 +3,7 @@
 **Assignment released 29 October 2026. Due Sunday, 22 November 2026,
 23:59 Hong Kong time (UTC+8).**
 
-**Updated 13 November 2026 (v1.1.1).** Four core parts are worth **20 marks each**:
+**Updated 17 November 2026 (v1.1.2).** Four core parts are worth **20 marks each**:
 implementation, training/inference, controlled experiments, and report writing.
 An additional **20 marks for extension/exploration** are available within Part 3.
 The assignment total is **100, not 120**. See [the full rubric and update notice](RUBRIC.md).
@@ -15,7 +15,9 @@ implementation correctness and the quality of the experiments and analysis.
 
 Submit your checked core ZIP (`STUDENT_ID.zip`) and, if attempting the extension,
 a separate `STUDENT_ID_extension.zip`. Each file must be at most 100 MB.
-The core report remains at most two pages; put extension analysis in a separate
+The main body of `report.pdf` may be **up to five pages; appendices have no page
+limit**. There is no minimum page count; shorter reports remain acceptable.
+This replaces the previous two-page limit. Put extension analysis in a separate
 `extension_report.pdf`. Already completed compliant core runs remain valid: this
 update does not require retraining or repackaging a valid core submission.
 
@@ -32,16 +34,16 @@ This repository contains only student starter code, public tests and utilities.
 The fixed data bundle is available from the versioned release below. No teacher solutions,
 reference weights, hidden evaluation data or private grading materials are included.
 
-## Downloads (v1.1.1; fixed data unchanged)
+## Downloads (v1.1.2; fixed data unchanged)
 
-- [Starter code ZIP](https://github.com/ludunjie1219/DASC7606-Assignment2/releases/download/v1.1.1/assignment2-starter-v1.1.1.zip)
+- [Starter code ZIP](https://github.com/ludunjie1219/DASC7606-Assignment2/releases/download/v1.1.2/assignment2-starter-v1.1.2.zip)
 - [Fixed data ZIP](https://github.com/ludunjie1219/DASC7606-Assignment2/releases/download/v1.0.0/assignment2-data-v1.0.0.zip)
-- [SHA-256 checksums](https://github.com/ludunjie1219/DASC7606-Assignment2/releases/download/v1.1.1/SHA256SUMS.txt)
-- [Updated assignment slides](https://github.com/ludunjie1219/DASC7606-Assignment2/releases/download/v1.1.1/DASC7606_Assignment_2_v1.1.1.pdf)
-- [Release notes](https://github.com/ludunjie1219/DASC7606-Assignment2/releases/tag/v1.1.1)
+- [SHA-256 checksums](https://github.com/ludunjie1219/DASC7606-Assignment2/releases/download/v1.1.2/SHA256SUMS.txt)
+- [Updated assignment slides](https://github.com/ludunjie1219/DASC7606-Assignment2/releases/download/v1.1.2/DASC7606_Assignment_2_v1.1.2.pdf)
+- [Release notes](https://github.com/ludunjie1219/DASC7606-Assignment2/releases/tag/v1.1.2)
 
-Use the v1.1.1 starter with the unchanged v1.0.0 data ZIP. The GitHub-generated
-source archives do not include data. If using Git, check out tag `v1.1.1` and
+Use the v1.1.2 starter with the unchanged v1.0.0 data ZIP. The GitHub-generated
+source archives do not include data. If using Git, check out tag `v1.1.2` and
 download the data ZIP separately. Do not overwrite your completed `src/model.py`
 with the starter: existing v1.0.0 training code and core ZIPs remain accepted.
 
@@ -102,8 +104,8 @@ sha256sum -c SHA256SUMS.txt
 # macOS alternative:
 shasum -a 256 -c SHA256SUMS.txt
 
-unzip assignment2-starter-v1.1.1.zip
-cd assignment2-starter-v1.1.1
+unzip assignment2-starter-v1.1.2.zip
+cd assignment2-starter-v1.1.2
 unzip ../assignment2-data-v1.0.0.zip
 ```
 
@@ -195,7 +197,7 @@ Do not treat grammatical sentences as proof of narrative consistency.
 
 ## 6. Prepare a submission
 
-Create `report.pdf` (up to two pages): implementation/method, controlled experiment
+Create `report.pdf` (main body up to five pages; appendices unlimited): implementation/method, controlled experiment
 table and analysis, curves, representative continuations, limitations and
 reproducibility. Include all code needed to reproduce the selected model.
 

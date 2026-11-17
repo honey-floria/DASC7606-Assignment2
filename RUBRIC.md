@@ -1,4 +1,4 @@
-# Assignment 2 rubric - updated 13 November 2026
+# Assignment 2 rubric - updated 17 November 2026
 
 This update applies to both DASC7606 sections and supersedes the earlier 80/20
 category description and one-final-attempt wording. Deadline: **22 November 2026,
@@ -9,7 +9,7 @@ category description and one-final-attempt wording. Deadline: **22 November 2026
 | Part 1: Implementation | 20 | Correct explicit masked attention, MLP, residual block and generation; shapes, gradients, causality, sampling and public API compatibility. |
 | Part 2: Training and inference | 20 | Completed unchanged baseline, valid checkpoint, reproducible configuration/logs, learning behaviour, validation and generated continuations. |
 | Part 3: Controlled experiments | 20 | One model-side and one optimization-side change relative to baseline, equal token budgets, justified hypotheses, controlled comparisons and interpretation. |
-| Part 4: Report writing | 20 | Clear and accurate methods, readable results/curves, thoughtful comparison, limitations and reproducibility; main report at most two pages. |
+| Part 4: Report writing | 20 | Clear and accurate methods, readable results/curves, thoughtful comparison, limitations and reproducibility; main body at most five pages, with no page limit for appendices. |
 | Part 3 extension/exploration | 20 | Further investigation beyond the two required single-factor experiments, assessed below. |
 | **Total** | **100** | **Core 80 + extension 20; not 120.** |
 
@@ -17,6 +17,13 @@ The extension is optional to attempt; without it the maximum is 80/100. It is no
 extra credit above 100. Core experiment marks do not require a novel method.
 The same experiment is not counted twice as both a required experiment and an
 extension without a clearly identified additional contribution.
+
+## Report length (17 November clarification)
+
+The main body of `report.pdf` has a **maximum of five pages**. Appendices have
+**no page limit** and may follow the main body in the same PDF. This replaces the
+previous two-page limit. There is no minimum page count; shorter reports remain
+acceptable. The separate `extension_report.pdf` requirement is unchanged.
 
 ## Extension: four criteria, five marks each
 

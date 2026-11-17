@@ -26,7 +26,7 @@ Create a directory containing these files at its root:
 
 ```text
 extension/
-  extension_report.pdf   # separate from the at-most-two-page main report
+  extension_report.pdf   # separate from the core report.pdf
   README.md              # idea, file map, dependencies, exact train/evaluate commands
   code/                  # all extension code needed to reproduce the results
   configs/               # exact configurations
@@ -35,7 +35,8 @@ extension/
 
 Keep the extension report concise: explain the question, implementation,
 controlled evidence and conclusions. Its pages do not count toward the main
-report's two-page limit. Reference rather than duplicate core results, and make
+report's five-page main-body limit. Appendices to the main report have no page
+limit. Reference rather than duplicate core results, and make
 the additional contribution explicit. A checkpoint is optional; if supplied,
 include at most one `extension_best.pt` and document its loading procedure.
 
