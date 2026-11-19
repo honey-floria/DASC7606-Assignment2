@@ -45,7 +45,33 @@ class CausalSelfAttention(nn.Module):
 
     def forward(self, x):
         """TODO 1: accept [B,T,C]; project Q/K/V; split heads; scale dot products; mask future keys; softmax over keys; attention dropout; merge heads; output projection and residual dropout. Use the provided layers/mask. Return [B,T,C]. Implement explicit attention, not SDPA or MultiheadAttention."""
-        raise NotImplementedError("CausalSelfAttention.forward")
+        if x.ndim != 3:
+            raise ValueError("attention input must be [batch, sequence, embedding]")
+        batch_size, sequence_length, embedding_size = x.shape
+        if embedding_size != self.config.n_embd:
+            raise ValueError("attention input has the wrong embedding size")
+        if sequence_length > self.config.block_size:
+            raise ValueError("attention input exceeds block_size")
+
+        query, key, value = self.c_attn(x).split(embedding_size, dim=2)
+        head_size = embedding_size // self.config.n_head
+
+        def split_heads(tensor):
+            return tensor.view(
+                batch_size, sequence_length, self.config.n_head, head_size
+            ).transpose(1, 2)
+
+        query, key, value = map(split_heads, (query, key, value))
+        scores = (query @ key.transpose(-2, -1)) / math.sqrt(head_size)
+        causal_mask = self.mask[:sequence_length, :sequence_length]
+        scores = scores.masked_fill(~causal_mask, float("-inf"))
+        weights = F.softmax(scores, dim=-1)
+        weights = self.attn_dropout(weights)
+        attended = weights @ value
+        attended = attended.transpose(1, 2).contiguous().view(
+            batch_size, sequence_length, embedding_size
+        )
+        return self.resid_dropout(self.c_proj(attended))
 
 
 class MLP(nn.Module):
@@ -57,7 +83,10 @@ class MLP(nn.Module):
 
     def forward(self, x):
         """TODO 2: apply the provided expansion layer, GELU, projection layer and dropout in that order; preserve [B,T,C]."""
-        raise NotImplementedError("MLP.forward")
+        x = self.c_fc(x)
+        x = F.gelu(x)
+        x = self.c_proj(x)
+        return self.dropout(x)
 
 
 class Block(nn.Module):
@@ -70,7 +99,9 @@ class Block(nn.Module):
 
     def forward(self, x):
         """TODO 3: implement a pre-normalized attention residual followed by a pre-normalized MLP residual, using the updated residual stream for the second normalization."""
-        raise NotImplementedError("Block.forward")
+        x = x + self.attn(self.ln_1(x))
+        x = x + self.mlp(self.ln_2(x))
+        return x
 
 
 class GPT(nn.Module):
@@ -117,4 +148,49 @@ class GPT(nn.Module):
     def generate(self, idx, max_new_tokens, temperature=1.0, top_k=None,
                  eos_id=None, generator=None):
         """TODO 4: validate nonempty prompts, nonnegative length, finite positive temperature and positive optional top_k. Temporarily use eval mode and restore the prior mode even on failure. Autoregressively crop context, take last-position logits, apply temperature and optional top-k, sample with the supplied generator and append. Support optional per-row EOS: finished rows append EOS while other rows continue; stop when all finish. Return original prompt plus generated IDs. No gradients."""
-        raise NotImplementedError("GPT.generate")
+        if idx.ndim != 2 or idx.shape[0] == 0 or idx.shape[1] == 0:
+            raise ValueError("prompt must be a nonempty [batch, sequence] tensor")
+        if type(max_new_tokens) is not int or max_new_tokens < 0:
+            raise ValueError("max_new_tokens must be a nonnegative integer")
+        try:
+            temperature = float(temperature)
+        except (TypeError, ValueError, OverflowError) as error:
+            raise ValueError("temperature must be finite and positive") from error
+        if not math.isfinite(temperature) or temperature <= 0:
+            raise ValueError("temperature must be finite and positive")
+        if top_k is not None and (type(top_k) is not int or top_k <= 0):
+            raise ValueError("top_k must be a positive integer")
+        if eos_id is not None and (
+            type(eos_id) is not int or not 0 <= eos_id < self.config.vocab_size
+        ):
+            raise ValueError("eos_id must be a token ID within the vocabulary")
+
+        was_training = self.training
+        self.eval()
+        try:
+            finished = torch.zeros(idx.shape[0], dtype=torch.bool, device=idx.device)
+            for _ in range(max_new_tokens):
+                context = idx[:, -self.config.block_size:]
+                logits, _ = self(context)
+                logits = logits[:, -1, :] / temperature
+                if top_k is not None:
+                    k = min(top_k, logits.shape[-1])
+                    threshold = torch.topk(logits, k, dim=-1).values[:, [-1]]
+                    logits = logits.masked_fill(logits < threshold, float("-inf"))
+                probabilities = F.softmax(logits, dim=-1)
+                next_token = torch.multinomial(
+                    probabilities, num_samples=1, generator=generator
+                )
+                if eos_id is not None:
+                    next_token = torch.where(
+                        finished[:, None],
+                        torch.full_like(next_token, eos_id),
+                        next_token,
+                    )
+                    finished |= next_token[:, 0].eq(eos_id)
+                idx = torch.cat((idx, next_token), dim=1)
+                if eos_id is not None and bool(finished.all()):
+                    break
+            return idx
+        finally:
+            self.train(was_training)
