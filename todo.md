@@ -28,20 +28,20 @@
 - [x] 处理 generate 参数校验、无梯度生成、临时 eval 模式，以及异常时也恢复原模式。
 - [x] 执行 `python -m pytest -q`，修复失败项。
 - [x] 执行 `bash scripts/run_smoke.sh cpu`。
-- [ ] 在正式 GPU 上执行 `bash scripts/run_smoke.sh cuda`，验证训练环境。
+- [x] 在正式 GPU 上执行 `bash scripts/run_smoke.sh cuda`，验证训练环境。
 
 注意：公开测试不覆盖全部评分测试；20 步 smoke run 不算正式 baseline。
 
 ## 3. 完成 baseline（20 分）
 
-- [ ] 保持 `configs/baseline.yaml` 不变。
-- [ ] 执行 `bash scripts/train_baseline.sh cuda`，完成 2,500 次 optimizer updates。
-- [ ] 确认预算为 10,240,000 个 target tokens：2,500 × 16 × 256，gradient accumulation 为 1。
-- [ ] 保留完整配置、日志、指标和 best.pt；last.pt 仅用于恢复训练，不提交。
-- [ ] 执行 `python scripts/plot_run.py outputs/baseline`。
-- [ ] 执行 `python -m src.sample --checkpoint outputs/baseline/best.pt --out outputs/baseline/samples.json`。
-- [ ] 执行 `python -m src.evaluate --checkpoint outputs/baseline/best.pt --tokens data/val.bin --max-tokens 0 --out outputs/baseline/evaluation.json`。
-- [ ] 检查曲线与续写，记录学习行为、重复和叙事一致性问题。
+- [x] 保持 `configs/baseline.yaml` 不变。
+- [x] 执行 `bash scripts/train_baseline.sh cuda`，完成 2,500 次 optimizer updates。
+- [x] 确认预算为 10,240,000 个 target tokens：2,500 × 16 × 256，gradient accumulation 为 1。
+- [x] 保留完整配置、日志、指标和 best.pt；last.pt 仅用于恢复训练，不提交。
+- [x] 执行 `python scripts/plot_run.py outputs/baseline`。
+- [x] 执行 `python -m src.sample --checkpoint outputs/baseline/best.pt --out outputs/baseline/samples.json`。
+- [x] 执行 `python -m src.evaluate --checkpoint outputs/baseline/best.pt --tokens data/val.bin --max-tokens 0 --out outputs/baseline/evaluation.json`。
+- [x] 检查曲线与续写，记录学习行为、重复和叙事一致性问题。
 
 Baseline：6 层、6 heads、width 384、context 256、vocab 8192。每个新 run 使用独立输出目录；仅在恢复同配置的中断训练时使用 `--resume`。
 
